@@ -2,6 +2,8 @@
 
 Vanilla JavaScript game project with Tailwind CSS and Vite.
 
+This repo section currently provides the tooling + structure baseline; gameplay implementation is handled in follow-up work.
+
 ## Local development
 
 ```bash
