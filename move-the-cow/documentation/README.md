@@ -7,7 +7,8 @@ This folder contains developer-facing documentation for project structure, codin
 - `code-style.md` — JavaScript/CSS/HTML style conventions.
 - `contributing.md` — how to add code and keep structure consistent.
 - `testing.md` — manual test approach for current scope.
-- `requirements-source.md` — where gameplay requirements are currently defined.
+- `requirements.md` — versioned mirror of gameplay requirements from Issue #2.
+- `requirements-source.md` — source-of-truth and sync policy for requirements.
 
 ## Local workflow
 - Install dependencies: `pnpm install`
