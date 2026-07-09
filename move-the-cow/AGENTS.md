@@ -13,13 +13,18 @@ Guidance for coding agents working in `move-the-cow/`.
 3. `documentation/requirements-source.md`
 
 ## Coding rules
+- Stack choices for this project:
+  - Vanilla JS for behavior
+  - Tailwind CSS for styling
+  - Vite for dev/build tooling
+- Use `pnpm` for dependency management and scripts.
 - Keep concerns separated:
   - board data (`src/boards.js`)
   - game logic (`src/game.js`)
   - UI/DOM (`src/ui.js`)
 - Prefer small pure functions for logic.
 - Avoid global mutable state.
-- Keep CSS low-specificity and class-based.
+- Keep CSS low-specificity; prefer Tailwind utilities over custom selectors.
 
 ## Change policy
 - Keep changes minimal and focused.
@@ -30,4 +35,5 @@ Guidance for coding agents working in `move-the-cow/`.
 - [ ] Structure remains modular
 - [ ] Style guide followed
 - [ ] Docs updated where needed
+- [ ] `pnpm dev` and `pnpm build` verified
 - [ ] Manual test notes included

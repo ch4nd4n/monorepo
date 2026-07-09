@@ -9,7 +9,8 @@
 ## Implementation checklist
 - Keep concerns separated: data vs logic vs UI.
 - Add or update docs when structure/style changes.
-- Avoid introducing frameworks unless explicitly requested.
+- Use Vanilla JS for behavior and Tailwind for styling.
+- Use `pnpm` for scripts and dependency management.
 - Keep PRs small and focused.
 
 ## Adding new boards
@@ -20,3 +21,4 @@
 - Clear summary of what changed.
 - Short test notes (manual steps + expected outcomes).
 - Confirm style guide compliance.
+- Include local run verification (`pnpm dev` and `pnpm build`).

@@ -13,17 +13,21 @@
 - Keep markup minimal and predictable for JS hooks.
 - Use `data-*` attributes for behavior hooks where helpful.
 
-## CSS
-- Keep styles in `styles/main.css` (or clearly named split files later).
-- Use class-based selectors; avoid styling by element depth.
-- Use CSS variables for theme tokens (color, spacing).
+## Tailwind / CSS
+- Prefer Tailwind utility classes for component styling.
+- Keep shared global styles in `styles/main.css`.
+- Use custom CSS only when utilities are insufficient.
 - Keep specificity low and avoid `!important`.
 
 ## Naming
 - Files: kebab-case (`game-controls.js` if split later).
 - Variables/functions: camelCase.
 - Constants: UPPER_SNAKE_CASE when truly constant.
-- CSS classes: kebab-case and descriptive (`board-cell`, `is-blocked`).
+- CSS classes (when custom classes are needed): kebab-case and descriptive (`board-cell`, `is-blocked`).
+
+## Tooling conventions
+- Use `pnpm` for dependency and script management.
+- Do not commit npm lockfiles; use `pnpm-lock.yaml`.
 
 ## Error handling and feedback
 - Return explicit validation outcomes from game logic.
