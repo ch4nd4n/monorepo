@@ -27,10 +27,15 @@ Living log of what's been done against the Kairos mockup (`Kairos App (standalon
 - Icons here are always shown regardless of `iconDisplayMode` — they're illustrative content, not action-button labels, same treatment as the mic-status dot and stepper +/- icons.
 - Added `tests/e2e/voice-commands-panel.spec.ts` (lists all 6 commands + wake-word hint, closes correctly, renders in light theme).
 
+## Done (2026-07-13, later still) — Session Summary layout
+
+- Extracted `src/app/composition/session-summary-panel.tsx` (`SessionSummaryPanel`), replacing the plain `<ul>` of `Elapsed:`/`Rounds completed:`/`Started:`/`Ended:` lines with a "Workout complete" badge row (finally putting the previously-unused `positive` green token to use) plus a 2×2 grid of icon-badge stat cards (`Hourglass`, `ListChecks`, `CalendarClock` ×2), matching the `VoiceCommandsPanel` icon-badge convention.
+- Empty state (no session run yet) unchanged in wording, restyled to match theme tokens.
+- Updated `tests/e2e/workout-controls.spec.ts` assertions that referenced the old `Elapsed:`/`Rounds completed:` colon-suffixed text; added `tests/e2e/session-summary-panel.spec.ts` covering the empty state, populated stats after stop, and light theme.
+
 ## Next TODO — design polish pass
 
-1. **Session Summary layout** — same `Panel` + plain `<ul>` treatment; needs a proper layout (the `positive` green token exists but is unused here).
-2. **Timer color by phase** (per mockup — rest phase has no distinct hue, it aliases muted text color: `--phase-rest: var(--text-2)`):
+1. **Timer color by phase** (per mockup — rest phase has no distinct hue, it aliases muted text color: `--phase-rest: var(--text-2)`):
    - Work → accent color (current behavior, correct).
    - Rest → subtle gray/muted, not accent.
    - Paused → pulsing, but dim/subtle — not the bright accent color it uses today.

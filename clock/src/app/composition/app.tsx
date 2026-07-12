@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ControlGrid } from '@app/composition/control-grid';
 import { DebugCard } from '@app/composition/debug-card';
 import { IntervalSetupCard } from '@app/composition/interval-setup-card';
-import { Panel } from '@app/composition/panel';
+import { SessionSummaryPanel } from '@app/composition/session-summary-panel';
 import { SettingsModal } from '@app/composition/settings-modal';
 import { TimerCard } from '@app/composition/timer-card';
 import { UtilityActions } from '@app/composition/utility-actions';
@@ -324,18 +324,12 @@ export function App(): JSX.Element {
         )}
 
         {panel === 'summary' && (
-          <Panel title="Session Summary" isLightTheme={isLightTheme} iconMode={settings.iconDisplayMode} onClose={() => setPanel(null)}>
-            {summary ? (
-              <ul>
-                <li>Elapsed: {formatDuration(summary.elapsedMs)}</li>
-                <li>Rounds completed: {summary.roundsCompleted}</li>
-                <li>Started: {new Date(summary.startedAtMs).toLocaleTimeString()}</li>
-                <li>Ended: {new Date(summary.endedAtMs).toLocaleTimeString()}</li>
-              </ul>
-            ) : (
-              <p>No summary yet. Stop or complete a session to view stats.</p>
-            )}
-          </Panel>
+          <SessionSummaryPanel
+            summary={summary}
+            isLightTheme={isLightTheme}
+            iconMode={settings.iconDisplayMode}
+            onClose={() => setPanel(null)}
+          />
         )}
 
         {debugEnabled && <DebugCard lastHeard={lastHeard} eventLog={eventLog} />}

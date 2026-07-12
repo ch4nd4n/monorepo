@@ -23,7 +23,7 @@ test.describe('workout clock controls', () => {
     await page.getByRole('button', { name: 'Stop' }).click();
 
     await expect(page.getByRole('heading', { name: 'Session Summary' })).toBeVisible();
-    await expect(page.getByText('Elapsed:')).toBeVisible();
+    await expect(page.getByText('Elapsed', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
   });
 
@@ -92,8 +92,9 @@ test.describe('workout clock controls', () => {
     await page.getByRole('button', { name: 'Stop' }).click();
 
     await expect(page.getByRole('heading', { name: 'Session Summary' })).toBeVisible();
-    await expect(page.getByText('Elapsed:')).toBeVisible();
-    await expect(page.getByText('Rounds completed:')).toBeVisible();
+    await expect(page.getByText('Workout complete')).toBeVisible();
+    await expect(page.getByText('Elapsed', { exact: true })).toBeVisible();
+    await expect(page.getByText('Rounds completed', { exact: true })).toBeVisible();
   });
 
   test('can skip to next interval', async ({ page }) => {
