@@ -76,3 +76,17 @@ Tracks product decisions made during initial grill-me discovery for Kairos.
 ### Scope boundaries
 - Frontend-first now; backend API later.
 - Explicit MVP out-of-scope includes: auth, cloud sync, backend analytics, social, wearables, multilingual support, custom wake word, natural-language parsing, multiple built-in templates.
+
+## 2026-07-13 — Hosting and product analytics
+
+### Hosting
+- Deploy Kairos as a Cloudflare Pages project connected to the monorepo.
+- Configure `clock` as the Pages project root directory, `pnpm build` as the build command, and `dist` as the build output directory.
+- Restrict build watch paths to `clock/**` (plus any future shared dependencies) so unrelated monorepo changes do not trigger Kairos deployments.
+
+### Google Analytics
+- Add Google Analytics 4 through a small, internal analytics module; do not add a third-party React wrapper.
+- Load Google Analytics only when `VITE_GA_MEASUREMENT_ID` is configured. Set this variable for the Cloudflare Pages production environment and leave it unset for local and preview builds by default.
+- Track only deliberate, privacy-safe product events such as workout start, completion, and voice enablement.
+- Do not collect voice transcripts, debug event logs, or free-form user-entered data.
+- Decide whether analytics requires explicit cookie consent before implementation, based on the launch audience and applicable requirements.

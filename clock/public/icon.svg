@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Kairos</title>
+  <rect width="512" height="512" rx="96" fill="#0d0c0a"/>
+  <circle cx="256" cy="256" r="154" fill="none" stroke="#f1f0ee" stroke-width="26"/>
+  <path d="M256 154v109l76 48" fill="none" stroke="#f1f0ee" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+  <circle cx="256" cy="256" r="18" fill="#fb7855"/>
+</svg>
