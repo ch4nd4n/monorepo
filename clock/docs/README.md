@@ -1,5 +1,6 @@
 # Docs Index
 
+- [Status](./status.md)
 - [Product Requirements](./product-requirements.md)
 - [Decision Log](./decision-log.md)
 - [MVP Checklist](./mvp-checklist.md)
