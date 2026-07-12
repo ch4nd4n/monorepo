@@ -53,4 +53,22 @@ describe('timer engine', () => {
     expect(snapshot.elapsedMs).toBe(6_000);
     expect(snapshot.phase).toBe('work');
   });
+
+  it('reset returns timer to idle baseline', () => {
+    const engine = createTimerEngine({
+      workMs: 30_000,
+      restMs: 10_000,
+      rounds: 1,
+      prerollSeconds: 3,
+    });
+
+    engine.start(0);
+    engine.reset();
+
+    const snapshot = engine.getSnapshot(10_000);
+
+    expect(snapshot.phase).toBe('idle');
+    expect(snapshot.elapsedMs).toBe(0);
+    expect(snapshot.remainingMs).toBe(30_000);
+  });
 });

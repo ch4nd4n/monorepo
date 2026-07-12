@@ -9,7 +9,10 @@ import {
 } from '@features/settings/domain/settings-types';
 import { WebSpeechAdapter } from '@features/voice-control/adapters/web-speech-adapter';
 import { parseVoicePhrase } from '@features/voice-control/application/phrase-parser';
-import type { CommandType } from '@features/workout-session/commands/command-types';
+import type {
+  CommandType,
+  WorkoutState,
+} from '@features/workout-session/commands/command-types';
 import {
   createWorkoutController,
   type SessionSummary,
@@ -150,9 +153,14 @@ export function App(): JSX.Element {
 
       const parsed = parseVoicePhrase(result.transcript);
       if (!parsed.ok) {
-        setEventLog((prev) => [`Rejected phrase: ${parsed.error}`, ...prev].slice(0, 100));
+        setEventLog((prev) => [`PARSE rejected: ${parsed.error}`, ...prev].slice(0, 100));
         return;
       }
+
+      setEventLog((prev) => [
+        `PARSE command: ${parsed.value.type} (normalized="${parsed.value.normalizedPhrase}")`,
+        ...prev,
+      ].slice(0, 100));
 
       applyCommand(parsed.value.type, 'voice', result.confidence);
     });
@@ -162,6 +170,20 @@ export function App(): JSX.Element {
     voiceAdapterRef.current.stop();
     setVoiceMode('micOff');
     setVoiceEnabled(false);
+  }
+
+  function handlePrimaryControl(): void {
+    if (view.workoutState === 'running' || view.workoutState === 'preroll') {
+      applyCommand('PAUSE', 'manual');
+      return;
+    }
+
+    if (view.workoutState === 'paused') {
+      applyCommand('RESUME', 'manual');
+      return;
+    }
+
+    applyCommand('START', 'manual');
   }
 
   const summary: SessionSummary | null = view.summary;
@@ -184,10 +206,10 @@ export function App(): JSX.Element {
       </section>
 
       {!isLocked && (
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-          <button type="button" onClick={() => applyCommand('START', 'manual')}>Start</button>
-          <button type="button" onClick={() => applyCommand('PAUSE', 'manual')}>Pause</button>
-          <button type="button" onClick={() => applyCommand('RESUME', 'manual')}>Resume</button>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
+          <button type="button" onClick={handlePrimaryControl}>
+            {getPrimaryControlLabel(view.workoutState)}
+          </button>
           <button type="button" onClick={() => applyCommand('NEXT', 'manual')}>Next</button>
           <button type="button" onClick={() => applyCommand('STOP', 'manual')}>Stop</button>
           <button type="button" onClick={() => applyCommand('RESET', 'manual')}>Reset</button>
@@ -367,6 +389,18 @@ function SettingsEditor(props: SettingsEditorProps): JSX.Element {
       </label>
     </div>
   );
+}
+
+function getPrimaryControlLabel(workoutState: WorkoutState): string {
+  if (workoutState === 'running' || workoutState === 'preroll') {
+    return 'Pause';
+  }
+
+  if (workoutState === 'paused') {
+    return 'Continue';
+  }
+
+  return 'Start';
 }
 
 function readPanelFromUrl(): Panel {

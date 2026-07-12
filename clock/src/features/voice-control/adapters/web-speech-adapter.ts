@@ -28,8 +28,8 @@ export class WebSpeechAdapter implements VoiceAdapter {
     this.recognition.lang = 'en-US';
 
     this.recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const [first] = event.results;
-      const alt = first[0];
+      const lastResult = event.results[event.results.length - 1];
+      const alt = lastResult[0];
       onResult({
         transcript: alt.transcript,
         confidence: alt.confidence ?? 0,

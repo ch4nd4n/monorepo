@@ -135,7 +135,7 @@ export function createWorkoutController(config: WorkoutControllerConfig): Workou
         break;
       }
       case 'RESET': {
-        timer.start(command.timestampMs);
+        timer.reset();
         sync(command.timestampMs);
         state = {
           ...state,
@@ -143,6 +143,8 @@ export function createWorkoutController(config: WorkoutControllerConfig): Workou
           phase: 'idle',
           elapsedMs: 0,
           round: 0,
+          remainingMs: config.workMs,
+          summary: null,
           lastMessage: 'Workout reset',
         };
         break;
@@ -153,6 +155,10 @@ export function createWorkoutController(config: WorkoutControllerConfig): Workou
   }
 
   function tick(nowMs: number): void {
+    if (state.workoutState === 'stopped') {
+      return;
+    }
+
     sync(nowMs);
   }
 

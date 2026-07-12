@@ -23,6 +23,7 @@ export interface TimerEngine {
   start(startedAtMs: number): void;
   pause(pausedAtMs: number): void;
   resume(resumedAtMs: number): void;
+  reset(): void;
   getSnapshot(nowMs: number): TimerSnapshot;
 }
 
@@ -57,6 +58,13 @@ export function createTimerEngine(config: TimerConfig): TimerEngine {
 
     state.status = 'running';
     state.accumulatedPausedMs += resumedAtMs - state.pauseStartedAtMs;
+    state.pauseStartedAtMs = null;
+  }
+
+  function reset(): void {
+    state.status = 'idle';
+    state.startedAtMs = 0;
+    state.accumulatedPausedMs = 0;
     state.pauseStartedAtMs = null;
   }
 
@@ -119,6 +127,7 @@ export function createTimerEngine(config: TimerConfig): TimerEngine {
     start,
     pause,
     resume,
+    reset,
     getSnapshot,
   };
 }
