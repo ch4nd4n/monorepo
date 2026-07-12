@@ -5,6 +5,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    allowedHosts: true,
+  },
   resolve: {
     alias: {
       '@app': resolve(__dirname, 'src/app'),

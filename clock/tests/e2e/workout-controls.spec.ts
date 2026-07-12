@@ -4,15 +4,12 @@ test.describe('workout clock controls', () => {
   test('start waits in preroll, then countdown runs, then stop shows summary', async ({ page }) => {
     await page.goto('/workout');
 
-    const timerDisplay = page.locator('section').first().locator('div').first();
+    const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
 
-    // During preroll we should be in preroll phase and show pause as primary control.
     await expect(page.getByText('Phase:').locator('strong')).toHaveText('preroll');
     await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
-
-    // Wait until preroll finishes and work countdown starts.
     await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
 
     const before = await timerDisplay.textContent();
@@ -25,7 +22,6 @@ test.describe('workout clock controls', () => {
 
     await page.getByRole('button', { name: 'Stop' }).click();
 
-    // After stop, summary should open and primary control should return to Start.
     await expect(page.getByRole('heading', { name: 'Session Summary' })).toBeVisible();
     await expect(page.getByText('Elapsed:')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
@@ -34,13 +30,12 @@ test.describe('workout clock controls', () => {
   test('stop freezes countdown and keeps it stable for 3 seconds', async ({ page }) => {
     await page.goto('/workout');
 
-    const timerDisplay = page.locator('section').first().locator('div').first();
+    const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
     await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
 
     await page.getByRole('button', { name: 'Stop' }).click();
-
     await expect(page.getByRole('heading', { name: 'Session Summary' })).toBeVisible();
 
     const stoppedValue = await timerDisplay.textContent();
@@ -65,6 +60,7 @@ test.describe('workout clock controls', () => {
       await expect(page.getByRole('heading', { name: 'Session Summary' })).toHaveCount(0);
     }
   });
+
   test('can start workout manually', async ({ page }) => {
     await page.goto('/workout');
 
@@ -112,7 +108,7 @@ test.describe('workout clock controls', () => {
   test('reset returns to idle baseline and freezes countdown for 3 seconds', async ({ page }) => {
     await page.goto('/workout');
 
-    const timerDisplay = page.locator('section').first().locator('div').first();
+    const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
     await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
@@ -134,7 +130,7 @@ test.describe('workout clock controls', () => {
   test('at 00:28, next moves work->rest then rest->work and resets work duration', async ({ page }) => {
     await page.goto('/workout');
 
-    const timerDisplay = page.locator('section').first().locator('div').first();
+    const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
     await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });

@@ -7,7 +7,7 @@ Guidance for coding agents working in this repository.
 - Implementation code is not started yet.
 
 ## Product Summary
-Build a **voice-controlled workout clock** with frontend-first delivery. Backend support will be added in a later phase.
+Build **Kairos**, a voice-controlled workout timer app, with frontend-first delivery. Backend support will be added in a later phase.
 
 ## Primary References
 - Product requirements: `docs/product-requirements.md`

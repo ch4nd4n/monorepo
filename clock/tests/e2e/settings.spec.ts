@@ -9,7 +9,7 @@ test.describe('settings updates timer behavior', () => {
 
     await page.getByRole('button', { name: 'Close' }).click();
 
-    const timerDisplay = page.locator('section').first().locator('div').first();
+    const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
     await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });

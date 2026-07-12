@@ -1,4 +1,4 @@
-# Voice-Controlled Workout Clock
+# Kairos
 
 A frontend-first app for running workout timers using voice commands.
 

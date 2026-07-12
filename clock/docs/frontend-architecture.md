@@ -1,6 +1,6 @@
 # Frontend Architecture (MVP)
 
-This document captures the implementation architecture for the Voice-Controlled Workout Clock frontend MVP.
+This document captures the implementation architecture for Kairos frontend MVP.
 
 ## 1) Architecture goals
 - Keep timer behavior deterministic and testable.
@@ -152,6 +152,14 @@ Define typed interfaces now (local/no-op implementations in MVP):
 - If denied: manual-controls-only mode + guidance banner.
 - On recognition drop: auto-retry with reconnecting state.
 - Bounded retry attempts; then set mic-off state + banner.
+
+### 7.1 Reconnect policy (MVP)
+- Reconnect status text: `Reconnecting voice…`
+- Retry attempts per disconnect: 3
+- Retry delay: ~800ms
+- On successful reconnect: reset retry counter and return to connected voice mode
+- On retry exhaustion: force `micOff`, show re-enable guidance banner
+- Manual controls remain available throughout reconnect/fallback
 
 ## 8) Privacy and diagnostics
 - No persistent voice transcript/history.

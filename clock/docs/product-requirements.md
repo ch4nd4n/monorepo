@@ -1,7 +1,7 @@
 # Product Requirements Document (PRD)
 
 ## 1) Product Name
-Voice-Controlled Workout Clock
+Kairos
 
 ## 2) Problem Statement
 During workouts, users often cannot conveniently interact with a timer using touch controls. They need a hands-free way to start, pause, resume, skip, and stop workout timing flows.
@@ -59,7 +59,13 @@ During workouts, users often cannot conveniently interact with a timer using tou
 ### 5.6 Permissions, failures, and recovery
 - Voice permission requested only via explicit **Enable Voice** action.
 - If mic permission denied: continue with full manual controls + clear re-enable guidance.
-- If recognition drops mid-session: auto-retry with status ("Reconnecting voice…"); bounded retries; then fallback to mic-off + banner.
+- If recognition drops mid-session: auto-retry with status ("Reconnecting voice…").
+- Reconnect retry policy (MVP):
+  - Maximum retries: **3** attempts per disconnect event.
+  - Retry delay: **~800ms** between attempts.
+  - On successful reconnect, reset retry counter.
+  - If retries are exhausted, fallback to **mic-off** mode and show banner guidance to tap **Enable Voice**.
+- Manual controls must remain fully usable during reconnect attempts and fallback state.
 
 ### 5.7 Accessibility and cues
 - Visual + audio cues for transitions.

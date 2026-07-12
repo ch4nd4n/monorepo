@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #f4f2f0;
+  background: #141312;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+}
+
+button {
+  @apply transition-colors;
+}

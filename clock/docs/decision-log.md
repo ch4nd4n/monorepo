@@ -1,6 +1,6 @@
 # Decision Log
 
-Tracks product decisions made during initial grill-me discovery for the Voice-Controlled Workout Clock.
+Tracks product decisions made during initial grill-me discovery for Kairos.
 
 ## 2026-07-12 — Initial discovery decisions
 
@@ -52,6 +52,11 @@ Tracks product decisions made during initial grill-me discovery for the Voice-Co
 - Request mic permission only via explicit "Enable Voice" action.
 - If mic permission denied: continue with manual controls + guidance banner.
 - On recognition drop: auto-retry with status; bounded retries; fallback to mic-off + banner if unrecovered.
+- Locked reconnect policy details:
+  - Max retries per disconnect: 3
+  - Retry delay: ~800ms
+  - Retry counter resets on successful reconnect
+  - Manual controls remain available during reconnect/fallback
 
 ### Duration warning policy
 - No hard session-length cap.

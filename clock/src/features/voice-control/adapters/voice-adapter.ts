@@ -4,10 +4,16 @@ export interface VoiceRecognitionResult {
   timestampMs: number;
 }
 
+export interface VoiceStartHandlers {
+  onResult: (result: VoiceRecognitionResult) => void;
+  onError: (message: string) => void;
+  onEnded: () => void;
+}
+
 export interface VoiceAdapter {
   isSupported(): boolean;
   requestPermission(): Promise<'granted' | 'denied'>;
-  startContinuous(onResult: (result: VoiceRecognitionResult) => void): void;
+  startContinuous(handlers: VoiceStartHandlers): void;
   stop(): void;
 }
 
@@ -25,6 +31,7 @@ declare global {
     stop(): void;
     onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => unknown) | null;
     onerror: ((this: SpeechRecognition, ev: Event) => unknown) | null;
+    onend: ((this: SpeechRecognition, ev: Event) => unknown) | null;
   }
 
   interface SpeechRecognitionEvent extends Event {
