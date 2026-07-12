@@ -101,4 +101,47 @@ describe('workout controller', () => {
     expect(controller.getState().workoutState).toBe('idle');
     expect(controller.getState().remainingMs).toBe(30_000);
   });
+
+  it('next moves from work to rest', () => {
+    const controller = createWorkoutController({
+      workMs: 30_000,
+      restMs: 10_000,
+      rounds: 2,
+      prerollEnabled: true,
+      prerollSeconds: 3,
+      minCommandConfidence: 0.6,
+    });
+
+    controller.dispatch({ type: 'START', source: 'manual', timestampMs: 0 });
+    controller.tick(5_000); // in work
+    expect(controller.getState().phase).toBe('work');
+
+    controller.dispatch({ type: 'NEXT', source: 'manual', timestampMs: 5_000 });
+
+    const state = controller.getState();
+    expect(state.phase).toBe('rest');
+    expect(state.remainingMs).toBe(10_000);
+  });
+
+  it('next moves from rest to next round work and resets work duration', () => {
+    const controller = createWorkoutController({
+      workMs: 30_000,
+      restMs: 10_000,
+      rounds: 2,
+      prerollEnabled: true,
+      prerollSeconds: 3,
+      minCommandConfidence: 0.6,
+    });
+
+    controller.dispatch({ type: 'START', source: 'manual', timestampMs: 0 });
+    controller.tick(35_000); // in rest of round 1
+    expect(controller.getState().phase).toBe('rest');
+
+    controller.dispatch({ type: 'NEXT', source: 'manual', timestampMs: 35_000 });
+
+    const state = controller.getState();
+    expect(state.phase).toBe('work');
+    expect(state.round).toBe(2);
+    expect(state.remainingMs).toBe(30_000);
+  });
 });

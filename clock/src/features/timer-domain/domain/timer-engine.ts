@@ -23,6 +23,7 @@ export interface TimerEngine {
   start(startedAtMs: number): void;
   pause(pausedAtMs: number): void;
   resume(resumedAtMs: number): void;
+  seekToElapsed(elapsedMs: number, nowMs: number): void;
   reset(): void;
   getSnapshot(nowMs: number): TimerSnapshot;
 }
@@ -59,6 +60,22 @@ export function createTimerEngine(config: TimerConfig): TimerEngine {
     state.status = 'running';
     state.accumulatedPausedMs += resumedAtMs - state.pauseStartedAtMs;
     state.pauseStartedAtMs = null;
+  }
+
+  function seekToElapsed(elapsedMs: number, nowMs: number): void {
+    if (state.status === 'idle') {
+      return;
+    }
+
+    const safeElapsed = Math.max(0, elapsedMs);
+    state.startedAtMs = nowMs - safeElapsed;
+    state.accumulatedPausedMs = 0;
+
+    if (state.status === 'paused') {
+      state.pauseStartedAtMs = nowMs;
+    } else {
+      state.pauseStartedAtMs = null;
+    }
   }
 
   function reset(): void {
@@ -127,6 +144,7 @@ export function createTimerEngine(config: TimerConfig): TimerEngine {
     start,
     pause,
     resume,
+    seekToElapsed,
     reset,
     getSnapshot,
   };

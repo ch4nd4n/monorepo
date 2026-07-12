@@ -114,8 +114,24 @@ export function createWorkoutController(config: WorkoutControllerConfig): Workou
         break;
       }
       case 'NEXT': {
-        // keep MVP simple: jump by making timer snapshot advance via now+remaining
-        sync(command.timestampMs + state.remainingMs);
+        const current = timer.getSnapshot(command.timestampMs);
+        const prerollMs = (config.prerollEnabled ? config.prerollSeconds : 0) * 1000;
+        const cycleMs = config.workMs + config.restMs;
+
+        let targetElapsedMs = current.elapsedMs;
+
+        if (current.phase === 'preroll') {
+          targetElapsedMs = prerollMs;
+        } else if (current.phase === 'work') {
+          const cycleIndex = Math.max(0, current.round - 1);
+          targetElapsedMs = prerollMs + cycleIndex * cycleMs + config.workMs;
+        } else if (current.phase === 'rest') {
+          const cycleIndex = Math.max(0, current.round - 1);
+          targetElapsedMs = prerollMs + (cycleIndex + 1) * cycleMs;
+        }
+
+        timer.seekToElapsed(targetElapsedMs, command.timestampMs);
+        sync(command.timestampMs);
         state = { ...state, lastMessage: 'Skipped to next interval' };
         break;
       }

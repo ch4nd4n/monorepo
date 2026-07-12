@@ -131,7 +131,7 @@ test.describe('workout clock controls', () => {
     expect(afterWaitValue).toEqual(resetValue);
   });
 
-  test('at 00:28 pause, next, and reset behave as expected', async ({ page }) => {
+  test('at 00:28, next moves work->rest then rest->work and resets work duration', async ({ page }) => {
     await page.goto('/workout');
 
     const timerDisplay = page.locator('section').first().locator('div').first();
@@ -140,24 +140,15 @@ test.describe('workout clock controls', () => {
     await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
     await expect(timerDisplay).toHaveText('00:28', { timeout: 6_000 });
 
-    await page.getByRole('button', { name: 'Pause' }).click();
-    await expect(page.getByText('Paused')).toBeVisible();
-
-    const pausedValue = await timerDisplay.textContent();
-    await page.waitForTimeout(1_300);
-    await expect(timerDisplay).toHaveText(pausedValue ?? '');
-
     await page.getByRole('button', { name: 'Next' }).click();
     await expect(page.getByText('Skipped to next interval')).toBeVisible();
+    await expect(page.getByText('Phase:').locator('strong')).toHaveText('rest');
+    await expect(timerDisplay).toHaveText('00:10');
 
-    const afterNextValue = await timerDisplay.textContent();
-    expect(afterNextValue).not.toBeNull();
-    expect(afterNextValue).toEqual(pausedValue);
-    await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
-
-    await page.getByRole('button', { name: 'Reset' }).click();
-    await expect(page.getByText('Workout reset')).toBeVisible();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('idle');
+    await page.waitForTimeout(1_000);
+    await page.getByRole('button', { name: 'Next' }).click();
+    await expect(page.getByText('Skipped to next interval')).toBeVisible();
+    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work');
     await expect(timerDisplay).toHaveText('00:30');
   });
 });
