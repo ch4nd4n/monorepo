@@ -14,6 +14,17 @@ if (app) {
           This page is wired with Tailwind CSS using Vite. Use this as the base for game UI implementation.
         </p>
       </section>
+      <section id="board"></section>
     </main>
   `;
+}
+
+function createToken(emoji = '🐄') {
+  const span = document.createElement('span');
+  span.className =
+    'bg-amber-300 p-2 rounded-xl border-2 inline-flex items-center justify-center';
+  span.textContent = emoji;
+  span.setAttribute('role', 'img');
+  span.setAttribute('aria-label', 'Board token');
+  return span;
 }
