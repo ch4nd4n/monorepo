@@ -8,10 +8,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-accent text-white hover:bg-accent/90',
+        default: 'bg-accent text-on-accent hover:bg-accent-hover active:bg-accent-press',
         secondary: 'bg-muted text-foreground hover:bg-muted/80',
         ghost: 'hover:bg-muted/60',
-        destructive: 'bg-red-600 text-white hover:bg-red-500',
+        destructive: 'bg-danger text-on-accent hover:bg-accent-hover active:bg-accent-press',
       },
       size: {
         default: 'h-10 px-4 py-2',
