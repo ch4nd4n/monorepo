@@ -8,6 +8,7 @@ import { Panel } from '@app/composition/panel';
 import { SettingsModal } from '@app/composition/settings-modal';
 import { TimerCard } from '@app/composition/timer-card';
 import { UtilityActions } from '@app/composition/utility-actions';
+import { VoiceCommandsPanel } from '@app/composition/voice-commands-panel';
 import { useVoiceControl } from '@app/hooks/use-voice-control';
 import { useWorkoutController } from '@app/hooks/use-workout-controller';
 
@@ -308,16 +309,7 @@ export function App(): JSX.Element {
         )}
 
         {panel === 'commands' && (
-          <Panel title="Voice Commands" isLightTheme={isLightTheme} iconMode={settings.iconDisplayMode} onClose={() => setPanel(null)}>
-            <ul>
-              <li>Clock, start</li>
-              <li>Clock, pause</li>
-              <li>Clock, resume</li>
-              <li>Clock, next</li>
-              <li>Clock, stop</li>
-              <li>Clock, reset</li>
-            </ul>
-          </Panel>
+          <VoiceCommandsPanel isLightTheme={isLightTheme} iconMode={settings.iconDisplayMode} onClose={() => setPanel(null)} />
         )}
 
         {panel === 'settings' && (

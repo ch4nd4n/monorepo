@@ -21,11 +21,31 @@ Living log of what's been done against the Kairos mockup (`Kairos App (standalon
 - **"Total N minutes" spacing** — was flush against the Start/Pause button below it (they're siblings in the same flex column with no gap). Added `mb-6` to `IntervalSetupCard`'s root section.
 - Added `src/shared/ui/stepper.test.tsx` and `src/shared/ui/checkbox.test.tsx`; updated `tests/e2e/settings.spec.ts` to drive the new stepper buttons instead of `.fill()`; refreshed the visual baseline again.
 
+## Done (2026-07-13, later still) — Voice Commands panel redesign
+
+- Extracted a new `src/app/composition/voice-commands-panel.tsx` (`VoiceCommandsPanel`), replacing the plain `<ul>` of phrases with a wake-word hint line ("Say “Clock” before every command") and a card per command: an icon badge (reusing `ControlGrid`'s icon mapping — `Play`/`Pause`/`SkipForward`/`Square`/`RotateCcw`) + monospace uppercase phrase + one-line description, theme-aware throughout.
+- Icons here are always shown regardless of `iconDisplayMode` — they're illustrative content, not action-button labels, same treatment as the mic-status dot and stepper +/- icons.
+- Added `tests/e2e/voice-commands-panel.spec.ts` (lists all 6 commands + wake-word hint, closes correctly, renders in light theme).
+
 ## Next TODO — design polish pass
 
-1. **Voice Commands panel** — current layout (`Panel` with a plain `<ul>`) looks rough; needs real visual design.
-2. **Session Summary layout** — same `Panel` + plain `<ul>` treatment; needs a proper layout (the `positive` green token exists but is unused here).
-3. **Timer color by phase** (per mockup — rest phase has no distinct hue, it aliases muted text color: `--phase-rest: var(--text-2)`):
+1. **Session Summary layout** — same `Panel` + plain `<ul>` treatment; needs a proper layout (the `positive` green token exists but is unused here).
+2. **Timer color by phase** (per mockup — rest phase has no distinct hue, it aliases muted text color: `--phase-rest: var(--text-2)`):
    - Work → accent color (current behavior, correct).
    - Rest → subtle gray/muted, not accent.
    - Paused → pulsing, but dim/subtle — not the bright accent color it uses today.
+
+## Next TODO — deployment and analytics
+
+1. **Cloudflare Pages deployment**
+   - Create a Pages project connected to the monorepo with `clock` as its root directory.
+   - Configure `pnpm build` and publish the `dist` output directory.
+   - Add build watch paths for `clock/**` and any future shared dependencies.
+   - Configure the production branch and custom domain when available.
+2. **Conditional Google Analytics 4**
+   - Add a small internal analytics module that loads only when `VITE_GA_MEASUREMENT_ID` is set.
+   - Set the measurement ID for the Cloudflare Pages production environment only; leave local and preview builds disabled by default.
+   - Track privacy-safe workout lifecycle events only; never collect voice transcripts, debug logs, or free-form user input.
+   - Decide whether explicit analytics consent is required before enabling the tag for the launch audience.
+3. **GitHub tracking**
+   - Create a GitHub issue covering this work and apply a `clock` project label (create the label if absent) once GitHub CLI authentication is restored.
