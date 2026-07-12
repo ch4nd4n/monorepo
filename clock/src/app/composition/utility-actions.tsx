@@ -26,29 +26,29 @@ export function UtilityActions({
   onToggleDebug,
 }: UtilityActionsProps): JSX.Element {
   return (
-    <section className="mt-4 flex flex-wrap gap-2">
+    <section className="mt-3 flex flex-wrap items-center justify-center gap-1.5 border-t border-border/50 pt-3 md:gap-2">
       {!voiceEnabled ? (
-        <Button variant="secondary" onClick={onEnableVoice}>
+        <Button size="sm" variant="secondary" onClick={onEnableVoice}>
           Enable Voice
         </Button>
       ) : (
-        <Button variant="secondary" onClick={onStopVoice}>
+        <Button size="sm" variant="secondary" onClick={onStopVoice}>
           Mic Off
         </Button>
       )}
-      <Button variant="ghost" onClick={onOpenCommands}>
+      <Button size="sm" variant="ghost" onClick={onOpenCommands}>
         Voice Commands
       </Button>
-      <Button variant="ghost" onClick={onOpenSettings}>
+      <Button size="sm" variant="ghost" onClick={onOpenSettings}>
         Settings
       </Button>
-      <Button variant="ghost" onClick={onOpenSummary}>
+      <Button size="sm" variant="ghost" onClick={onOpenSummary}>
         Summary
       </Button>
-      <Button variant="ghost" onClick={onToggleLock}>
+      <Button size="sm" variant="ghost" onClick={onToggleLock}>
         {isLocked ? 'Unlock Screen' : 'Lock Screen'}
       </Button>
-      <Button variant="ghost" onClick={onToggleDebug}>
+      <Button size="sm" variant="ghost" onClick={onToggleDebug}>
         {debugEnabled ? 'Hide Debug' : 'Show Debug'}
       </Button>
     </section>

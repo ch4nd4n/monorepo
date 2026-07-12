@@ -107,41 +107,43 @@ export function App(): JSX.Element {
   const summary: SessionSummary | null = view.summary;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-6 md:px-6">
-      <header className="mb-4 flex items-center justify-between">
-        <h1 className="text-3xl font-semibold tracking-tight">Kairos</h1>
-        <Badge>Voice: {voiceMode}</Badge>
+    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-4 py-6 md:px-8">
+      <header className="mb-1 flex items-center justify-between">
+        <h1 className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground md:text-base">Kairos</h1>
+        <Badge className="border-border/50 bg-transparent text-muted-foreground">Voice: {voiceMode}</Badge>
       </header>
 
-      <TimerCard
-        timerText={formatDuration(view.remainingMs)}
-        phase={view.phase}
-        round={view.round}
-        totalRounds={settings.rounds}
-        lastMessage={view.lastMessage}
-      />
-
-      {!isLocked && (
-        <ControlGrid
-          primaryLabel={getPrimaryControlLabel(view.workoutState)}
-          onPrimary={() => {
-            if (view.workoutState === 'running' || view.workoutState === 'preroll') {
-              applyCommand('PAUSE', 'manual');
-              return;
-            }
-
-            if (view.workoutState === 'paused') {
-              applyCommand('RESUME', 'manual');
-              return;
-            }
-
-            applyCommand('START', 'manual');
-          }}
-          onNext={() => applyCommand('NEXT', 'manual')}
-          onStop={() => applyCommand('STOP', 'manual')}
-          onReset={() => applyCommand('RESET', 'manual')}
+      <div className="flex flex-1 flex-col">
+        <TimerCard
+          timerText={formatDuration(view.remainingMs)}
+          phase={view.phase}
+          round={view.round}
+          totalRounds={settings.rounds}
+          lastMessage={view.lastMessage}
         />
-      )}
+
+        {!isLocked && (
+          <ControlGrid
+            primaryLabel={getPrimaryControlLabel(view.workoutState)}
+            onPrimary={() => {
+              if (view.workoutState === 'running' || view.workoutState === 'preroll') {
+                applyCommand('PAUSE', 'manual');
+                return;
+              }
+
+              if (view.workoutState === 'paused') {
+                applyCommand('RESUME', 'manual');
+                return;
+              }
+
+              applyCommand('START', 'manual');
+            }}
+            onNext={() => applyCommand('NEXT', 'manual')}
+            onStop={() => applyCommand('STOP', 'manual')}
+            onReset={() => applyCommand('RESET', 'manual')}
+          />
+        )}
+      </div>
 
       <UtilityActions
         voiceEnabled={voiceEnabled}
@@ -160,13 +162,13 @@ export function App(): JSX.Element {
 
       {voiceStatusMessage && (
         <Card className="mt-3 border-red-400/40 bg-red-950/20">
-          <CardContent className="p-3 text-sm text-red-100">{voiceStatusMessage}</CardContent>
+          <CardContent className="p-2.5 text-xs text-red-100 md:text-sm">{voiceStatusMessage}</CardContent>
         </Card>
       )}
 
       {overPreferredDuration && (
         <Card className="mt-3 border-yellow-400/40 bg-yellow-950/20">
-          <CardContent className="p-3 text-sm text-yellow-100">
+          <CardContent className="p-2.5 text-xs text-yellow-100 md:text-sm">
             Warning: estimated workout ({formatDuration(estimatedMs)}) exceeds preferred max (
             {settings.preferredMaxSessionMinutes} min). You can continue.
           </CardContent>
