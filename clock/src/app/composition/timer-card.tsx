@@ -81,7 +81,7 @@ export function TimerCard({
 
       <p
         className={cn(
-          'mt-5 text-center font-mono text-base tracking-[0.32em] md:text-[1.7rem]',
+          'mt-6 text-center font-mono text-base tracking-[0.32em] md:text-[1.7rem]',
           isLightTheme ? 'text-light-accent' : 'text-accent',
         )}
       >
@@ -89,7 +89,7 @@ export function TimerCard({
       </p>
       <p
         className={cn(
-          'mt-3 text-center text-xs uppercase tracking-[0.12em] md:text-sm',
+          'mt-1.5 text-center text-xs uppercase tracking-[0.12em] md:text-sm',
           isLightTheme ? 'text-light-faint' : 'text-muted-foreground',
         )}
       >

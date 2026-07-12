@@ -1,3 +1,5 @@
+export type IconDisplayMode = 'text' | 'iconsWithText' | 'iconsOnly';
+
 export interface UserSettings {
   workMs: number;
   restMs: number;
@@ -8,6 +10,7 @@ export interface UserSettings {
   renderFps: number;
   vibrationEnabled: boolean;
   minCommandConfidence: number;
+  iconDisplayMode: IconDisplayMode;
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -20,4 +23,5 @@ export const DEFAULT_SETTINGS: UserSettings = {
   renderFps: 4,
   vibrationEnabled: false,
   minCommandConfidence: 0.6,
+  iconDisplayMode: 'iconsWithText',
 };

@@ -1,3 +1,5 @@
+import { Minus, Plus } from 'lucide-react';
+
 import type { UserSettings } from '@features/settings/domain/settings-types';
 
 import { Button } from '@shared/ui/button';
@@ -114,14 +116,14 @@ function StepField({ label, value, isLightTheme, onMinus, onPlus }: StepFieldPro
         {label}
       </p>
       <div className={cn('flex items-center justify-between rounded-lg border px-4 py-3', isLightTheme ? 'border-light-border bg-light-surface' : 'border-border bg-card')}>
-        <Button size="sm" variant="ghost" onClick={onMinus}>
-          −
+        <Button size="sm" variant="ghost" aria-label={`Decrease ${label}`} onClick={onMinus}>
+          <Minus size={16} aria-hidden focusable="false" />
         </Button>
         <span className={cn('text-4xl font-semibold', isLightTheme ? 'text-light-text' : 'text-foreground')}>
           {value}
         </span>
-        <Button size="sm" variant="ghost" onClick={onPlus}>
-          +
+        <Button size="sm" variant="ghost" aria-label={`Increase ${label}`} onClick={onPlus}>
+          <Plus size={16} aria-hidden focusable="false" />
         </Button>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { Moon, Settings as SettingsIcon, Sun } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { ControlGrid } from '@app/composition/control-grid';
@@ -21,6 +22,7 @@ import type { SessionSummary } from '@features/workout-session/workout-controlle
 import { Badge } from '@shared/ui/badge';
 import { Button } from '@shared/ui/button';
 import { Card, CardContent } from '@shared/ui/card';
+import { IconButton } from '@shared/ui/icon-button';
 import {
   playCountdownCue,
   playIntervalTransitionCue,
@@ -162,7 +164,7 @@ export function App(): JSX.Element {
   return (
     <div className={isLightTheme ? 'min-h-screen bg-light-bg text-light-text' : 'min-h-screen bg-background'}>
       <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-4 py-6 md:px-8">
-        <header className="mb-1 flex items-center justify-between">
+        <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <h1
             className={
               isLightTheme
@@ -172,18 +174,37 @@ export function App(): JSX.Element {
           >
             Kairos
           </h1>
-          <div className="flex items-center gap-2">
-            <Button
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1">
+              {(['A', 'B', 'C'] as const).map((mode) => (
+                <Button
+                  key={mode}
+                  size="sm"
+                  variant={timerMode === mode ? 'default' : 'ghost'}
+                  className={cn(timerMode !== mode && 'border border-border/50')}
+                  onClick={() => setTimerMode(mode)}
+                >
+                  {mode}
+                </Button>
+              ))}
+            </div>
+            <IconButton
+              icon={isLightTheme ? Moon : Sun}
+              label={isLightTheme ? 'Dark' : 'Light'}
+              mode={settings.iconDisplayMode}
               size="sm"
               variant="ghost"
               className={isLightTheme ? 'border border-light-border-strong text-light-muted' : 'border border-border/60'}
               onClick={() => setTheme((value) => (value === 'dark' ? 'light' : 'dark'))}
-            >
-              {isLightTheme ? 'Dark' : 'Light'}
-            </Button>
-            <Button size="sm" variant="ghost" onClick={() => setPanel('settings')}>
-              Settings
-            </Button>
+            />
+            <IconButton
+              icon={SettingsIcon}
+              label="Settings"
+              mode={settings.iconDisplayMode}
+              size="sm"
+              variant="ghost"
+              onClick={() => setPanel('settings')}
+            />
             <Badge
               className={
                 isLightTheme
@@ -195,20 +216,6 @@ export function App(): JSX.Element {
             </Badge>
           </div>
         </header>
-
-        <div className="mb-2 flex items-center justify-end gap-2">
-          {(['A', 'B', 'C'] as const).map((mode) => (
-            <Button
-              key={mode}
-              size="sm"
-              variant={timerMode === mode ? 'default' : 'ghost'}
-              className={cn(timerMode !== mode && 'border border-border/50')}
-              onClick={() => setTimerMode(mode)}
-            >
-              {mode}
-            </Button>
-          ))}
-        </div>
 
         <div className="flex flex-1 flex-col">
           {view.workoutState === 'idle' ? (
@@ -230,6 +237,7 @@ export function App(): JSX.Element {
             <ControlGrid
               primaryLabel={getPrimaryControlLabel(view.workoutState)}
               isLightTheme={isLightTheme}
+              iconMode={settings.iconDisplayMode}
               onPrimary={() => {
                 if (view.workoutState === 'running' || view.workoutState === 'preroll') {
                   applyCommand('PAUSE', 'manual');
@@ -256,6 +264,7 @@ export function App(): JSX.Element {
           debugEnabled={debugEnabled}
           isLightTheme={isLightTheme}
           showVoiceHints={showVoiceHints}
+          iconMode={settings.iconDisplayMode}
           onEnableVoice={async () => {
             await enableVoice();
             setVoiceToast('Voice enabled');
@@ -299,7 +308,7 @@ export function App(): JSX.Element {
         )}
 
         {panel === 'commands' && (
-          <Panel title="Voice Commands" isLightTheme={isLightTheme} onClose={() => setPanel(null)}>
+          <Panel title="Voice Commands" isLightTheme={isLightTheme} iconMode={settings.iconDisplayMode} onClose={() => setPanel(null)}>
             <ul>
               <li>Clock, start</li>
               <li>Clock, pause</li>
@@ -323,7 +332,7 @@ export function App(): JSX.Element {
         )}
 
         {panel === 'summary' && (
-          <Panel title="Session Summary" isLightTheme={isLightTheme} onClose={() => setPanel(null)}>
+          <Panel title="Session Summary" isLightTheme={isLightTheme} iconMode={settings.iconDisplayMode} onClose={() => setPanel(null)}>
             {summary ? (
               <ul>
                 <li>Elapsed: {formatDuration(summary.elapsedMs)}</li>

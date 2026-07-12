@@ -1,4 +1,8 @@
-import { Button } from '@shared/ui/button';
+import { Bug, ClipboardList, Lock, Mic, MicOff, MessageSquare, Unlock } from 'lucide-react';
+
+import type { IconDisplayMode } from '@features/settings/domain/settings-types';
+
+import { IconButton } from '@shared/ui/icon-button';
 import { cn } from '@shared/utils/cn';
 
 interface UtilityActionsProps {
@@ -7,6 +11,7 @@ interface UtilityActionsProps {
   debugEnabled: boolean;
   isLightTheme: boolean;
   showVoiceHints: boolean;
+  iconMode: IconDisplayMode;
   onEnableVoice: () => void;
   onStopVoice: () => void;
   onOpenCommands: () => void;
@@ -27,13 +32,14 @@ export function UtilityActions({
   onToggleDebug,
   isLightTheme,
   showVoiceHints,
+  iconMode,
 }: UtilityActionsProps): JSX.Element {
   return (
     <section
       className={
         isLightTheme
-          ? 'mt-4 rounded-lg border border-light-border bg-light-surface/70 p-3 pt-4 opacity-95 md:gap-2'
-          : 'mt-4 rounded-lg border border-border/40 bg-card/40 p-3 pt-4 opacity-90 md:gap-2'
+          ? 'mt-4 rounded-lg border border-light-border bg-light-surface/70 p-3 opacity-95'
+          : 'mt-4 rounded-lg border border-border/40 bg-card/40 p-3 opacity-90'
       }
     >
       <div className="mb-2 flex items-center justify-between gap-3">
@@ -49,13 +55,9 @@ export function UtilityActions({
           </span>
         </div>
         {!voiceEnabled ? (
-          <Button size="sm" variant="secondary" onClick={onEnableVoice}>
-            Enable
-          </Button>
+          <IconButton icon={Mic} label="Enable" mode={iconMode} size="sm" variant="secondary" onClick={onEnableVoice} />
         ) : (
-          <Button size="sm" variant="secondary" onClick={onStopVoice}>
-            Turn off
-          </Button>
+          <IconButton icon={MicOff} label="Turn off" mode={iconMode} size="sm" variant="secondary" onClick={onStopVoice} />
         )}
       </div>
 
@@ -70,18 +72,24 @@ export function UtilityActions({
       )}
 
       <div className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2">
-        <Button size="sm" variant="ghost" onClick={onOpenCommands}>
-          Voice Commands
-        </Button>
-        <Button size="sm" variant="ghost" onClick={onOpenSummary}>
-          Summary
-        </Button>
-        <Button size="sm" variant="ghost" onClick={onToggleLock}>
-          {isLocked ? 'Unlock Screen' : 'Lock Screen'}
-        </Button>
-        <Button size="sm" variant="ghost" onClick={onToggleDebug}>
-          {debugEnabled ? 'Hide Debug' : 'Show Debug'}
-        </Button>
+        <IconButton icon={MessageSquare} label="Voice Commands" mode={iconMode} size="sm" variant="ghost" onClick={onOpenCommands} />
+        <IconButton icon={ClipboardList} label="Summary" mode={iconMode} size="sm" variant="ghost" onClick={onOpenSummary} />
+        <IconButton
+          icon={isLocked ? Unlock : Lock}
+          label={isLocked ? 'Unlock Screen' : 'Lock Screen'}
+          mode={iconMode}
+          size="sm"
+          variant="ghost"
+          onClick={onToggleLock}
+        />
+        <IconButton
+          icon={Bug}
+          label={debugEnabled ? 'Hide Debug' : 'Show Debug'}
+          mode={iconMode}
+          size="sm"
+          variant="ghost"
+          onClick={onToggleDebug}
+        />
       </div>
     </section>
   );

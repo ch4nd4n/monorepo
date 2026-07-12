@@ -1,8 +1,11 @@
+import { X } from 'lucide-react';
+
 import { SettingsEditor } from '@app/composition/settings-editor';
 
 import type { UserSettings } from '@features/settings/domain/settings-types';
 
 import { Button } from '@shared/ui/button';
+import { IconButton } from '@shared/ui/icon-button';
 import { cn } from '@shared/utils/cn';
 
 interface SettingsModalProps {
@@ -32,9 +35,7 @@ export function SettingsModal({
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Settings</h2>
-          <Button aria-label="Close" variant="ghost" size="sm" onClick={onClose}>
-            ✕
-          </Button>
+          <IconButton icon={X} label="Close" mode={settings.iconDisplayMode} variant="ghost" size="sm" onClick={onClose} />
         </div>
 
         <div className="mb-4">
