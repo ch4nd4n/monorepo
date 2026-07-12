@@ -12,17 +12,17 @@ test.describe('settings updates timer behavior', () => {
     const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
+    await expect(page.getByTestId('phase-value')).toHaveText(/work/i, { timeout: 6_000 });
 
     // Skip from work -> rest and verify rest duration starts at configured 5 seconds.
     await page.getByRole('button', { name: 'Next' }).click();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('rest');
+    await expect(page.getByTestId('phase-value')).toHaveText(/rest/i);
     await expect(timerDisplay).toHaveText('00:05');
 
     // Skip from rest -> work and verify work duration resets to configured 3 seconds.
     await page.waitForTimeout(1_000);
     await page.getByRole('button', { name: 'Next' }).click();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work');
+    await expect(page.getByTestId('phase-value')).toHaveText(/work/i);
     await expect(timerDisplay).toHaveText('00:03');
   });
 });

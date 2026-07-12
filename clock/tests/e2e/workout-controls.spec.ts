@@ -8,9 +8,9 @@ test.describe('workout clock controls', () => {
 
     await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('preroll');
+    await expect(page.getByTestId('phase-value')).toHaveText(/preroll/i);
     await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
+    await expect(page.getByTestId('phase-value')).toHaveText(/work/i, { timeout: 6_000 });
 
     const before = await timerDisplay.textContent();
     await page.waitForTimeout(1_300);
@@ -33,7 +33,7 @@ test.describe('workout clock controls', () => {
     const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
+    await expect(page.getByTestId('phase-value')).toHaveText(/work/i, { timeout: 6_000 });
 
     await page.getByRole('button', { name: 'Stop' }).click();
     await expect(page.getByRole('heading', { name: 'Session Summary' })).toBeVisible();
@@ -67,7 +67,7 @@ test.describe('workout clock controls', () => {
     await page.getByRole('button', { name: 'Start' }).click();
 
     await expect(page.getByText('Started')).toBeVisible();
-    await expect(page.getByText(/Phase:/)).toBeVisible();
+    await expect(page.getByTestId('phase-value')).toBeVisible();
   });
 
   test('primary control toggles start, pause, continue', async ({ page }) => {
@@ -105,26 +105,17 @@ test.describe('workout clock controls', () => {
     await expect(page.getByText('Skipped to next interval')).toBeVisible();
   });
 
-  test('reset returns to idle baseline and freezes countdown for 3 seconds', async ({ page }) => {
+  test('reset returns to idle setup landing state', async ({ page }) => {
     await page.goto('/workout');
 
-    const timerDisplay = page.getByTestId('timer-display');
-
     await page.getByRole('button', { name: 'Start' }).click();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
+    await expect(page.getByTestId('phase-value')).toHaveText(/work/i, { timeout: 6_000 });
 
     await page.getByRole('button', { name: 'Reset' }).click();
 
-    await expect(page.getByText('Workout reset')).toBeVisible();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('idle');
+    await expect(page.getByRole('heading', { name: 'Set your intervals' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
-
-    const resetValue = await timerDisplay.textContent();
-    expect(resetValue).toBe('00:30');
-
-    await page.waitForTimeout(3_000);
-    const afterWaitValue = await timerDisplay.textContent();
-    expect(afterWaitValue).toEqual(resetValue);
+    await expect(page.getByTestId('timer-display')).toHaveCount(0);
   });
 
   test('at 00:28, next moves work->rest then rest->work and resets work duration', async ({ page }) => {
@@ -133,18 +124,18 @@ test.describe('workout clock controls', () => {
     const timerDisplay = page.getByTestId('timer-display');
 
     await page.getByRole('button', { name: 'Start' }).click();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work', { timeout: 6_000 });
+    await expect(page.getByTestId('phase-value')).toHaveText(/work/i, { timeout: 6_000 });
     await expect(timerDisplay).toHaveText('00:28', { timeout: 6_000 });
 
     await page.getByRole('button', { name: 'Next' }).click();
     await expect(page.getByText('Skipped to next interval')).toBeVisible();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('rest');
+    await expect(page.getByTestId('phase-value')).toHaveText(/rest/i);
     await expect(timerDisplay).toHaveText('00:10');
 
     await page.waitForTimeout(1_000);
     await page.getByRole('button', { name: 'Next' }).click();
     await expect(page.getByText('Skipped to next interval')).toBeVisible();
-    await expect(page.getByText('Phase:').locator('strong')).toHaveText('work');
+    await expect(page.getByTestId('phase-value')).toHaveText(/work/i);
     await expect(timerDisplay).toHaveText('00:30');
   });
 });
