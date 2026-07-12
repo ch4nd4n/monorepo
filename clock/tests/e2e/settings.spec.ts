@@ -1,11 +1,18 @@
 import { expect, test } from '@playwright/test';
 
+async function clickTimes(locator: import('@playwright/test').Locator, times: number): Promise<void> {
+  for (let i = 0; i < times; i += 1) {
+    await locator.click();
+  }
+}
+
 test.describe('settings updates timer behavior', () => {
   test('changing work=3 and rest=5 updates workout intervals', async ({ page }) => {
     await page.goto('/workout?panel=settings');
 
-    await page.getByLabel('Work (seconds)').fill('3');
-    await page.getByLabel('Rest (seconds)').fill('5');
+    // Default work is 30s, rest is 10s; step down to 3s and 5s via the steppers.
+    await clickTimes(page.getByRole('button', { name: 'Decrease Work (seconds)' }), 27);
+    await clickTimes(page.getByRole('button', { name: 'Decrease Rest (seconds)' }), 5);
 
     await page.getByRole('button', { name: 'Close' }).click();
 

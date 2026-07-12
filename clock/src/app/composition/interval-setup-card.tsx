@@ -1,8 +1,7 @@
-import { Minus, Plus } from 'lucide-react';
-
 import type { UserSettings } from '@features/settings/domain/settings-types';
 
 import { Button } from '@shared/ui/button';
+import { Stepper } from '@shared/ui/stepper';
 import { cn } from '@shared/utils/cn';
 
 interface IntervalSetupCardProps {
@@ -39,7 +38,7 @@ export function IntervalSetupCard({ settings, isLightTheme, onChange }: Interval
   }
 
   return (
-    <section className="mx-auto mt-6 w-full max-w-3xl">
+    <section className="mx-auto mb-6 mt-6 w-full max-w-3xl">
       <h2 className={cn('text-4xl font-semibold md:text-6xl', isLightTheme ? 'text-light-text' : 'text-foreground')}>
         Set your intervals
       </h2>
@@ -71,21 +70,21 @@ export function IntervalSetupCard({ settings, isLightTheme, onChange }: Interval
       </div>
 
       <div className="mt-6 grid gap-3 md:grid-cols-3">
-        <StepField
+        <Stepper
           label="Work"
           value={workSec}
           isLightTheme={isLightTheme}
           onMinus={() => update({ workMs: Math.max(1_000, settings.workMs - 1_000) })}
           onPlus={() => update({ workMs: settings.workMs + 1_000 })}
         />
-        <StepField
+        <Stepper
           label="Rest"
           value={restSec}
           isLightTheme={isLightTheme}
           onMinus={() => update({ restMs: Math.max(1_000, settings.restMs - 1_000) })}
           onPlus={() => update({ restMs: settings.restMs + 1_000 })}
         />
-        <StepField
+        <Stepper
           label="Rounds"
           value={settings.rounds}
           isLightTheme={isLightTheme}
@@ -98,34 +97,5 @@ export function IntervalSetupCard({ settings, isLightTheme, onChange }: Interval
         Total {Math.round((settings.workMs + settings.restMs) * settings.rounds / 1000 / 60)} min
       </p>
     </section>
-  );
-}
-
-interface StepFieldProps {
-  label: string;
-  value: number;
-  isLightTheme: boolean;
-  onMinus: () => void;
-  onPlus: () => void;
-}
-
-function StepField({ label, value, isLightTheme, onMinus, onPlus }: StepFieldProps): JSX.Element {
-  return (
-    <div>
-      <p className={cn('mb-2 text-xs uppercase tracking-[0.22em]', isLightTheme ? 'text-light-faint' : 'text-muted-foreground')}>
-        {label}
-      </p>
-      <div className={cn('flex items-center justify-between rounded-lg border px-4 py-3', isLightTheme ? 'border-light-border bg-light-surface' : 'border-border bg-card')}>
-        <Button size="sm" variant="ghost" aria-label={`Decrease ${label}`} onClick={onMinus}>
-          <Minus size={16} aria-hidden focusable="false" />
-        </Button>
-        <span className={cn('text-4xl font-semibold', isLightTheme ? 'text-light-text' : 'text-foreground')}>
-          {value}
-        </span>
-        <Button size="sm" variant="ghost" aria-label={`Increase ${label}`} onClick={onPlus}>
-          <Plus size={16} aria-hidden focusable="false" />
-        </Button>
-      </div>
-    </div>
   );
 }

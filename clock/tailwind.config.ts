@@ -40,9 +40,6 @@ const config: Config = {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
-      borderRadius: {
-        lg: '0.75rem',
-      },
     },
   },
   plugins: [],

@@ -29,7 +29,7 @@ export function SettingsModal({
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 px-4">
       <section
         className={cn(
-          'w-full max-w-xl rounded-xl border p-5 shadow-2xl',
+          'w-full max-w-xl rounded-lg border p-5 shadow-2xl',
           isLightTheme ? 'border-light-border bg-light-surface text-light-text' : 'border-border bg-card text-foreground',
         )}
       >
@@ -39,24 +39,32 @@ export function SettingsModal({
         </div>
 
         <div className="mb-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Theme</p>
+          <p className={cn('mb-2 text-xs font-semibold uppercase tracking-[0.2em]', isLightTheme ? 'text-light-muted' : 'text-muted-foreground')}>
+            Theme
+          </p>
           <div className="grid grid-cols-2 gap-2">
-            <Button
-              variant={isLightTheme ? 'default' : 'secondary'}
-              onClick={() => onChangeTheme('light')}
-            >
-              Light
-            </Button>
-            <Button
-              variant={!isLightTheme ? 'default' : 'secondary'}
-              onClick={() => onChangeTheme('dark')}
-            >
-              Dark
-            </Button>
+            {(['light', 'dark'] as const).map((option) => {
+              const selected = isLightTheme ? option === 'light' : option === 'dark';
+              return (
+                <Button
+                  key={option}
+                  type="button"
+                  variant="ghost"
+                  className={cn(
+                    'border text-xs capitalize',
+                    isLightTheme ? 'border-light-border' : 'border-border',
+                    selected && (isLightTheme ? 'bg-light-text text-light-bg' : 'bg-foreground text-background'),
+                  )}
+                  onClick={() => onChangeTheme(option)}
+                >
+                  {option}
+                </Button>
+              );
+            })}
           </div>
         </div>
 
-        <SettingsEditor settings={settings} onChange={onChangeSettings} locked={locked} />
+        <SettingsEditor settings={settings} isLightTheme={isLightTheme} onChange={onChangeSettings} locked={locked} />
       </section>
     </div>
   );
