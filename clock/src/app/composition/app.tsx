@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { ControlGrid } from '@app/composition/control-grid';
 import { DebugCard } from '@app/composition/debug-card';
@@ -21,10 +21,18 @@ import type { SessionSummary } from '@features/workout-session/workout-controlle
 import { Badge } from '@shared/ui/badge';
 import { Button } from '@shared/ui/button';
 import { Card, CardContent } from '@shared/ui/card';
+import {
+  playCountdownCue,
+  playIntervalTransitionCue,
+  playWorkoutCompleteCue,
+  playWorkoutStartCue,
+} from '@shared/utils/audio-cues';
 import { cn } from '@shared/utils/cn';
 import { formatDuration } from '@shared/utils/format-duration';
 
 const repository = new LocalSettingsRepository();
+
+const COUNTDOWN_WINDOW_MS = 3_000;
 
 type PanelType = 'settings' | 'commands' | 'summary' | null;
 type TimerMode = 'A' | 'B' | 'C';
@@ -44,12 +52,18 @@ export function App(): JSX.Element {
   const [voiceToast, setVoiceToast] = useState<string | null>(null);
   const [showVoiceHints, setShowVoiceHints] = useState(false);
 
+  const hasPlayedCompleteCueRef = useRef(false);
+
   function pushEvent(message: string): void {
     setEventLog((prev) => [message, ...prev].slice(0, 100));
   }
 
   function handleCompleted(): void {
     setPanel('summary');
+    if (!hasPlayedCompleteCueRef.current) {
+      hasPlayedCompleteCueRef.current = true;
+      playWorkoutCompleteCue();
+    }
   }
 
   const { view, dispatchCommand } = useWorkoutController({
@@ -64,7 +78,12 @@ export function App(): JSX.Element {
     pushEvent(`${new Date().toISOString()} ${source}:${type} ${result.decision} (${result.reason})`);
 
     if (result.decision === 'accepted') {
-      playBeep();
+      if (type === 'START') {
+        hasPlayedCompleteCueRef.current = false;
+        playWorkoutStartCue();
+      } else {
+        playIntervalTransitionCue();
+      }
       if (settings.vibrationEnabled && capabilities.vibrationSupported) {
         navigator.vibrate(80);
       }
@@ -73,6 +92,28 @@ export function App(): JSX.Element {
       }
     }
   }
+
+  const countdownCueKeyRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const isCountable =
+      (view.workoutState === 'running' || view.workoutState === 'preroll') &&
+      (view.phase === 'preroll' || view.phase === 'work' || view.phase === 'rest');
+
+    if (!isCountable) {
+      return;
+    }
+
+    const key = `${view.phase}-${view.round}`;
+    if (
+      view.remainingMs > 0 &&
+      view.remainingMs <= COUNTDOWN_WINDOW_MS &&
+      countdownCueKeyRef.current !== key
+    ) {
+      countdownCueKeyRef.current = key;
+      playCountdownCue();
+    }
+  }, [view.phase, view.round, view.remainingMs, view.workoutState]);
 
   const {
     voiceMode,
@@ -332,19 +373,4 @@ function writePanelToUrl(panel: PanelType): void {
     url.searchParams.set('panel', panel);
   }
   window.history.replaceState({}, '', url);
-}
-
-function playBeep(): void {
-  const context = new AudioContext();
-  const oscillator = context.createOscillator();
-  const gainNode = context.createGain();
-  oscillator.type = 'sine';
-  oscillator.frequency.value = 880;
-  gainNode.gain.value = 0.02;
-
-  oscillator.connect(gainNode);
-  gainNode.connect(context.destination);
-
-  oscillator.start();
-  oscillator.stop(context.currentTime + 0.08);
 }
